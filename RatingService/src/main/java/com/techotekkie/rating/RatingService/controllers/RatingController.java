@@ -24,7 +24,11 @@ public class RatingController {
         return ResponseEntity.status(HttpStatus.CREATED).body(ratingServices.create(rating));
     }
 
-    @GetMapping("users/userId")
+    @GetMapping
+    public  ResponseEntity<List<Rating>> getRating(){
+        return ResponseEntity.ok(ratingServices.getRating());
+    }
+    @GetMapping("users/{userId}")
     public ResponseEntity<List<Rating>> getRatingByUserId(@PathVariable String userId){
         return ResponseEntity.ok(ratingServices.getRatingByUserId(userId));
     }
