@@ -4,6 +4,7 @@ import com.techotekkie.user.service.UserService.entities.Hotel;
 import com.techotekkie.user.service.UserService.entities.Rating;
 import com.techotekkie.user.service.UserService.entities.User;
 import com.techotekkie.user.service.UserService.exceptions.ResourceNotFoundException;
+import com.techotekkie.user.service.UserService.external.services.HotelService;
 import com.techotekkie.user.service.UserService.repositories.UserRepository;
 import com.techotekkie.user.service.UserService.services.UserServices;
 import org.slf4j.Logger;
@@ -26,6 +27,9 @@ public class UserServiceImpl implements UserServices {
     private UserRepository userRepository;
     @Autowired
     private RestTemplate restTemplate;
+
+    @Autowired
+    private HotelService hotelService;
 
     private Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
     @Override
@@ -54,11 +58,11 @@ public class UserServiceImpl implements UserServices {
         List<Rating> ratingList = ratings.stream().map(rating -> {
             //api call to hotel service to get the hotel
             //http://localhost:8082/hotels/cf3cbe42-99be-4016-abf2-4bfdb4dea460
-            ResponseEntity<Hotel> forEntity = restTemplate.getForEntity("http://HOTEL-SERVICE/hotels/"+rating.getHotelId(),Hotel.class);
+//            ResponseEntity<Hotel> forEntity = restTemplate.getForEntity("http://HOTEL-SERVICE/hotels/"+rating.getHotelId(),Hotel.class);
             //set the hotel to rating
-            Hotel hotel = forEntity.getBody();
+            Hotel hotel = hotelService.getHotel(rating.getHotelId());
             rating.setHotel(hotel);
-            logger.info("response status code:"+forEntity.getStatusCode());
+//            logger.info("response status code:"+forEntity.getStatusCode());
             //return the rating
             return rating;
 
