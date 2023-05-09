@@ -3,6 +3,7 @@ import com.techotekkie.user.service.UserService.entities.User;
 import com.techotekkie.user.service.UserService.services.UserServices;
 import com.techotekkie.user.service.UserService.services.impl.UserServiceImpl;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import io.github.resilience4j.retry.annotation.Retry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -35,7 +36,8 @@ public class UserController {
     int retryCount= 1;
     @GetMapping("/{userId}")
    // @CircuitBreaker(name = "ratingHotelBreaker",fallbackMethod = "ratingHotelFallback")
-    @Retry(name ="ratingHotelService", fallbackMethod = "ratingHotelFallback")
+   // @Retry(name ="ratingHotelService", fallbackMethod = "ratingHotelFallback")
+    @RateLimiter(name ="userRateLimiter", fallbackMethod = "ratingHotelFallback")
 
     public  ResponseEntity<User> getSingleUser(@PathVariable String userId){
 
